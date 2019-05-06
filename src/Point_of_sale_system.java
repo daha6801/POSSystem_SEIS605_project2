@@ -44,18 +44,30 @@ public class Point_of_sale_system extends Application {
 		 Scene scene = new Scene(view.setupScene(), 800, 700);
 		 
 			primaryStage.setScene(scene);
-			primaryStage.show();
-	
 		
 			model.loadData(); //this will load the data from .csv file
-	        //Scene scene = new Scene(new Group());
-	        primaryStage.setTitle("Point Of Sale System");
+
 	        primaryStage.setWidth(1000);
 	        primaryStage.setHeight(600);
 
 	        final Label label = new Label("Welcome to Point of Sale System");
 	        
-	        view.tableView.setEditable(true);
+	        setupTable();
+
+	        final VBox vbox = new VBox();
+
+	        vbox.setSpacing(5);
+	        vbox.setPadding(new Insets(10, 0, 0, 10));
+	        vbox.getChildren().addAll(label, view.tableView);
+
+	        primaryStage.setScene(scene);
+
+	        primaryStage.show(); 
+	    }
+
+	 
+	  private void setupTable() {
+		 view.tableView.setEditable(true);
 	        view.tableView.getSelectionModel().setCellSelectionEnabled(true);
 	        
 	        
@@ -81,20 +93,7 @@ public class Point_of_sale_system extends Application {
 	             dataColumn.setCellFactory(cellFactoryTextFieldTableCell);
 
 	        }
-
-	        final VBox vbox = new VBox();
-
-	        vbox.setSpacing(5);
-	        vbox.setPadding(new Insets(10, 0, 0, 10));
-	        vbox.getChildren().addAll(label, view.tableView);
-
-	        //((Group) scene.getRoot()).getChildren().addAll(vbox);
-
-	        primaryStage.setScene(scene);
-
-	        primaryStage.show(); 
 	    }
-
 
 	    private ObservableList<TableColumn> generateTableViewColumns() {
 	        ObservableList<TableColumn> tableViewColumns = FXCollections.observableArrayList();
@@ -142,16 +141,6 @@ public class Point_of_sale_system extends Application {
 	        return tableViewRows;
 	    }
 
-	    private Callback<TableColumn.CellDataFeatures<ArrayList, Color>, ObservableValue<Color>> buildCallbackColor(int index) {
-	        Callback<TableColumn.CellDataFeatures<ArrayList, Color>, ObservableValue<Color>> cellValueFactory = new Callback<TableColumn.CellDataFeatures<ArrayList, Color>, ObservableValue<Color>>() {
-	            @Override
-	            public ObservableValue<Color> call(TableColumn.CellDataFeatures<ArrayList, Color> param) {
-	                return new SimpleObjectProperty(param.getValue().get(index));
-	            }
-	        };
-	        return cellValueFactory;
-	    }
-
 	    private Callback<TableColumn.CellDataFeatures<ArrayList, String>, ObservableValue<String>> buildCallbackString(int index) {
 	        Callback<TableColumn.CellDataFeatures<ArrayList, String>, ObservableValue<String>> cellValueFactory = new Callback<TableColumn.CellDataFeatures<ArrayList, String>, ObservableValue<String>>() {
 	            @Override
@@ -160,43 +149,6 @@ public class Point_of_sale_system extends Application {
 	            }
 	        };
 	        return cellValueFactory;
-	    }
-
-	    private Callback<TableColumn<ArrayList, Color>, TableCell<ArrayList, Color>> buildCallbackPane() {
-	        Callback<TableColumn<ArrayList, Color>, TableCell<ArrayList, Color>> cellFactory = new Callback<TableColumn<ArrayList, Color>, TableCell<ArrayList, Color>>() {
-	            @Override
-	            public TableCell call(TableColumn tableColumn) {
-	                double cellWidth = tableColumn.getMinWidth();
-	                double cellHeight = 35;
-
-	                TableCell tableCell = new TableCell<Object, Color>() {
-	                    @Override
-	                    protected void updateItem(Color item, boolean empty) {
-	                        super.updateItem(item, empty);
-
-	                        if (empty) {
-	                            setText(null);
-	                            setGraphic(null);
-	                        } else {
-	                            Pane p = new Pane();
-	                            p.setPrefSize(cellWidth, cellHeight);
-	                            Canvas canvasRectLayerColor = new Canvas();
-	                            p.getChildren().add(canvasRectLayerColor);
-	                            canvasRectLayerColor.setWidth(20);
-	                            canvasRectLayerColor.setHeight(20);
-	                            GraphicsContext gc = canvasRectLayerColor.getGraphicsContext2D();      
-	                            gc.setFill(item);
-	                            gc.fillRect(0, 0, canvasRectLayerColor.getWidth(), canvasRectLayerColor.getHeight());
-	                            setGraphic(p);
-	                        }
-	                    }
-	                };
-
-	                return tableCell;
-	            }
-	        };
-
-	        return cellFactory;
 	    }
 
 	    private Callback<TableColumn<ArrayList, String>, TableCell<ArrayList, String>> buildCallbackTextFieldTableCell() {
