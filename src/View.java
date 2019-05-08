@@ -43,7 +43,7 @@ public class View {
 	Button submitButton = new Button("Login");
 	Button createUser = new Button("New User");
 	
-	TableView tableView = new TableView<>();
+	TableView<Item> tableView = new TableView<>();
 	
 	BorderPane setupScene() {
 		

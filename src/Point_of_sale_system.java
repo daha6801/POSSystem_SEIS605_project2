@@ -1,39 +1,23 @@
 package JavaFX11;
 
-import java.util.ArrayList;
-
 import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 public class Point_of_sale_system extends Application {
 	Model model = new Model();
 	View view = new View();
-	private Text actionStatus;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -41,126 +25,62 @@ public class Point_of_sale_system extends Application {
 
 	 public void start(Stage primaryStage) throws Exception {
 
+		 model.loadData(); //this will load the data from .csv file
 		 Scene scene = new Scene(view.setupScene(), 800, 700);
 		 
-			primaryStage.setScene(scene);
-		
-			model.loadData(); //this will load the data from .csv file
+	     primaryStage.setWidth(1000);
+	     primaryStage.setHeight(600);
 
-	        primaryStage.setWidth(1000);
-	        primaryStage.setHeight(600);
+	     setupActions();
 
-	        final Label label = new Label("Welcome to Point of Sale System");
+	     final Label label = new Label("Welcome to Point of Sale System");
+	     final VBox vbox = new VBox();
+	     vbox.setSpacing(5);
+	     vbox.setPadding(new Insets(10, 0, 0, 10));
+	     vbox.getChildren().addAll(label, view.tableView);
 	        
-	        setupTable();
-
-	        final VBox vbox = new VBox();
-
-	        vbox.setSpacing(5);
-	        vbox.setPadding(new Insets(10, 0, 0, 10));
-	        vbox.getChildren().addAll(label, view.tableView);
-
-	        primaryStage.setScene(scene);
-
-	        primaryStage.show(); 
-	    }
-
-	 
-	  private void setupTable() {
-		 view.tableView.setEditable(true);
-	        view.tableView.getSelectionModel().setCellSelectionEnabled(true);
-	        
-	        
-	        ObservableList<TableColumn> tableViewColumns = generateTableViewColumns();
-	        view.tableView.getColumns().setAll(tableViewColumns);
-
-	        ObservableList<TableColumn> tcs = view.tableView.getColumns();
-	        for (int i = 0; i < tcs.size(); i++) {
-	            TableColumn tc = tcs.get(i);
-
-	            Callback<TableColumn.CellDataFeatures<ArrayList, String>, ObservableValue<String>> cellValueFactory = buildCallbackString(i);
-	            tc.setCellValueFactory(cellValueFactory);
-
-	        }
-
-	        ObservableList<ArrayList> tableViewRows = generateTableViewRows();
-	        view.tableView.getItems().setAll(tableViewRows);
-
-	        for (int i = 0; i < tcs.size(); i++) {
-	            TableColumn dataColumn = tcs.get(i);
-
-	             Callback<TableColumn<ArrayList, String>, TableCell<ArrayList, String>> cellFactoryTextFieldTableCell = buildCallbackTextFieldTableCell();
-	             dataColumn.setCellFactory(cellFactoryTextFieldTableCell);
-
-	        }
-	    }
-
-	    private ObservableList<TableColumn> generateTableViewColumns() {
-	        ObservableList<TableColumn> tableViewColumns = FXCollections.observableArrayList();
-	        TableColumn firstDataColumn = new TableColumn<>("Item");
-	        TableColumn secondDataColumn = new TableColumn<>("Quantity");
-	        TableColumn thirdDataColumn = new TableColumn<>("Price");
-	        //TableColumn fourthDataColumn = new TableColumn<>("Select");
-
-	        firstDataColumn.setMinWidth(200);
-	        secondDataColumn.setMinWidth(200);
-	        thirdDataColumn.setMinWidth(200);
-	        //fourthDataColumn.setMinWidth(200);
-
-	        tableViewColumns.add(firstDataColumn);
-	        tableViewColumns.add(secondDataColumn);
-	        tableViewColumns.add(thirdDataColumn); 
-	        //tableViewColumns.add(fourthDataColumn);
-
-	        return tableViewColumns;
-	    }
-
-	    private ObservableList<ArrayList> generateTableViewRows() {
-
-	        ObservableList<ArrayList> tableViewRows = FXCollections.observableArrayList();
-	        for (int i = 0; i < model.itemsObservableList.size() ; i++) {
-	            ArrayList dataRow = new ArrayList<>();
-
-	            String value1 = model.itemsObservableList.get(i).name;
-	            String  value2 = Double.toString(model.itemsObservableList.get(i).unitQuantity);
-	            String  value3 = Double.toString(model.itemsObservableList.get(i).unitPrice);
-	            //String value4 = Double.toString(model.itemsObservableList.get(i).unitPrice);
-	            
-	            Spinner<Integer> selectSpinner = new Spinner<>();
-	            //IntegerSpinnerValueFactory spinnerFactorySelect = new IntegerSpinnerValueFactory(0,84,36);
-	            //selectSpinner.setValueFactory(spinnerFactorySelect);	            
-	            
-	            dataRow.add(value1);
-	            dataRow.add(value2);
-	            dataRow.add(value3);
-	            //dataRow.add(selectSpinner);
-
-	            tableViewRows.add(dataRow);
-
-	        }
-	        return tableViewRows;
-	    }
-
-	    private Callback<TableColumn.CellDataFeatures<ArrayList, String>, ObservableValue<String>> buildCallbackString(int index) {
-	        Callback<TableColumn.CellDataFeatures<ArrayList, String>, ObservableValue<String>> cellValueFactory = new Callback<TableColumn.CellDataFeatures<ArrayList, String>, ObservableValue<String>>() {
-	            @Override
-	            public ObservableValue<String> call(TableColumn.CellDataFeatures<ArrayList, String> param) {
-	                return new SimpleStringProperty((String) param.getValue().get(index));
-	            }
-	        };
-	        return cellValueFactory;
-	    }
-
-	    private Callback<TableColumn<ArrayList, String>, TableCell<ArrayList, String>> buildCallbackTextFieldTableCell() {
-	        Callback<TableColumn<ArrayList, String>, TableCell<ArrayList, String>> cellFactory = new Callback<TableColumn<ArrayList, String>, TableCell<ArrayList, String>>() {
-	            @Override
-	            public TableCell call(TableColumn tc) {
-	                TextFieldTableCell tftc = new TextFieldTableCell();
-
-	                return tftc;
-	            }
-	        };
-	        return cellFactory;
-	    }
 	   
+	     primaryStage.setScene(scene);
+	     primaryStage.setTitle("Point Of Sale System");
+	     primaryStage.show(); 
+	 }
+
+	private void setupActions() {
+			
+		//bind table view to data
+		view.tableView.setItems(model.itemsObservableList);
+		
+		//Create columns and bind them to their Property ValueFactory
+		TableColumn<Item, String> nameColumn = new TableColumn<>("Item name");
+		nameColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("name"));
+		TableColumn<Item, Integer> quantityColumn = new TableColumn<>("Quantity");
+		quantityColumn.setCellValueFactory(new PropertyValueFactory<Item, Integer>("unitQuantity"));
+		TableColumn<Item, Double> priceColumn = new TableColumn<>("Price");
+		priceColumn.setCellValueFactory(new PropertyValueFactory<Item, Double>("unitPrice"));
+		TableColumn<Item, Spinner> selectColumn = new TableColumn<>("Select Item");
+		
+		
+		
+		//Callback for spinner column
+		Callback<CellDataFeatures<Item, Spinner>, ObservableValue<Spinner>> callback = 
+			new Callback <CellDataFeatures<Item,Spinner>, ObservableValue<Spinner>> () {
+
+				@Override
+				public ObservableValue<Spinner> call(CellDataFeatures<Item,Spinner> arg0) {
+						Integer qnty = arg0.getValue().getUnitQuantity();
+						Spinner<Integer> selectSpinner = new Spinner();
+						IntegerSpinnerValueFactory spinnerFactorySelect = new IntegerSpinnerValueFactory(0,qnty,1);
+						selectSpinner.setValueFactory(spinnerFactorySelect);
+						return new SimpleObjectProperty<Spinner>(selectSpinner);
+				}
+			
+		};
+		
+		selectColumn.setCellValueFactory(callback);
+		
+		//add all columns to the tableview
+		view.tableView.getColumns().setAll(nameColumn,quantityColumn,priceColumn, selectColumn);
+				
+	}
+
 }
