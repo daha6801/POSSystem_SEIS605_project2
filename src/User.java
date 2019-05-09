@@ -1,4 +1,4 @@
-package JavaFX11;
+package src;
 
 public class User {
 	String userid;

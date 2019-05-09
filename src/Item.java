@@ -1,4 +1,4 @@
-package JavaFX11;
+package src;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;

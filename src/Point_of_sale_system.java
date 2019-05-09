@@ -1,4 +1,4 @@
-package JavaFX11;
+package src;
 
 import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;

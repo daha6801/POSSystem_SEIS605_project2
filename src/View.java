@@ -1,4 +1,4 @@
-package JavaFX11;
+package src;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableView;
@@ -31,76 +32,92 @@ import javafx.stage.Window;
 
 public class View {
 	
-	Label title = new Label("Point of Sale System");
-	Label nameLabel = new Label("User Id : ");
+	Label title = new Label("Welcome to the Point-of-Sale Registration System");
+	Label nameLabel = new Label("Username");
 	TextField nameField = new TextField();
 
 	
-	Label passwordLabel = new Label("Password : ");
+	Label passwordLabel = new Label("Password");
 	PasswordField passwordField = new PasswordField();
 
 	
-	Button submitButton = new Button("Login");
+	Button loginButton = new Button("Log in");
 	Button createUser = new Button("New User");
 	
-	TableView<Item> tableView = new TableView<>();
+	CheckBox rememberMe = new CheckBox("Remember Me");
 	
+	TableView<Item> tableView = new TableView<>();	
 	BorderPane setupScene() {
 		
 		BorderPane root = new BorderPane();
 		GridPane topGrid = new GridPane();
+		topGrid.setAlignment(Pos.CENTER);
 		root.setTop(topGrid);
 		
         
 		/**setup TopGrid*/
-		topGrid.setVgap(10);
-		topGrid.setHgap(10);
+		topGrid.setVgap(1);
+		topGrid.setHgap(1);
 		
 		//add controls to topGrid	
 
-		title.setFont(Font.font("sans-serif", FontWeight.BOLD, 30));
+		title.setFont(Font.font("sans-serif", FontWeight.BOLD, 25));
 		title.setTextFill(Color.BLACK);
 		
 	    topGrid.add(title, 0,0,2,1);
-	    GridPane.setHalignment(title, HPos.CENTER);
-	    GridPane.setMargin(title, new Insets(20, 0,20,0));
+	    GridPane.setHalignment(title, HPos.LEFT);
+	    GridPane.setMargin(title, new Insets(20, 0,10,0));
 	    
 	    nameLabel.setPrefHeight(40);
-	    nameLabel.setPrefWidth(1000);
-		topGrid.add(nameLabel, 0, 1);
+	    nameLabel.setPrefWidth(100);
+		topGrid.add(nameLabel, 0, 2);
+		GridPane.setHalignment(loginButton, HPos.RIGHT);
+		
 		
 		nameField.setPrefHeight(40);
-		nameField.setPrefWidth(1000);
-		topGrid.add(nameField, 1,1);
+		nameField.setPrefWidth(10);
+		topGrid.add(nameField, 0,3);
+		
 		
     
 	    
-		topGrid.add(passwordLabel, 0, 3);
+		topGrid.add(passwordLabel, 0, 7);
+		passwordLabel.setPrefHeight(40);
 	    passwordField.setPrefHeight(40);
-	    topGrid.add(passwordField, 1, 3);	    
+	    passwordField.setPrefWidth(10);
+	    topGrid.add(passwordField, 0, 8);	    
 	    
-		topGrid.add(submitButton, 0, 4, 2, 1);
+		topGrid.add(loginButton, 0,40,1,1);
+		GridPane.setHalignment(loginButton, HPos.RIGHT);
 		
 					
-	    submitButton.setPrefHeight(40);
-	    submitButton.setDefaultButton(true);
-	    submitButton.setPrefWidth(100);
+		loginButton.setPrefHeight(40);
+		loginButton.setDefaultButton(true);
+		loginButton.setPrefWidth(100);
     
-	    topGrid.add(createUser,0, 4, 2, 2);
+		topGrid.add(rememberMe,0, 15, 1, 1);
+		GridPane.setHalignment(rememberMe, HPos.RIGHT);
+	    
+	    createUser.setPrefHeight(40);
+	    createUser.setDefaultButton(true);
+	    createUser.setPrefWidth(100);
+		
+	    topGrid.add(createUser,0, 40, 1, 1);
+	    GridPane.setHalignment(createUser, HPos.LEFT);
 	    
 	    createUser.setPrefHeight(40);
 	    createUser.setDefaultButton(true);
 	    createUser.setPrefWidth(100);
 	    
-	    topGrid.setHalignment(submitButton, HPos.RIGHT);
-	    topGrid.setMargin(submitButton, new Insets(20, 0,20,0));
+	   /* topGrid.setHalignment(loginButton, HPos.RIGHT);
+	    topGrid.setMargin(loginButton, new Insets(20, 0,20,0));
 		
 	    topGrid.setHalignment(createUser, HPos.LEFT);
-	    topGrid.setMargin(createUser, new Insets(20, 0,20,0));
+	    topGrid.setMargin(createUser, new Insets(20, 0,20,0));*/
 	    
 	    ArrayList userlist = new ArrayList();
 	    
-	    submitButton.setOnAction(new EventHandler<ActionEvent>() {
+	    loginButton.setOnAction(new EventHandler<ActionEvent>() {  //login button
 	    	Boolean found_a_match = false;
             @Override
             public void handle(ActionEvent event) {
@@ -191,9 +208,10 @@ public class View {
 		topGrid.getColumnConstraints().add(new ColumnConstraints(500));
 		
 		//setup look and feel, fonts, alignment, etc			
-		topGrid.setPrefSize(2000, 5000);
+		topGrid.setPrefSize(600, 600);
 		root.setPrefSize(2000, 5000);
-		BorderPane.setMargin(topGrid, new Insets(10, 10, 10, 10));
+		BorderPane.setMargin(topGrid, new Insets(10, 10, 10, 40));
+		
 		return root;
 	}
 
