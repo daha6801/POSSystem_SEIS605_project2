@@ -1,5 +1,6 @@
 package src;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -108,14 +109,16 @@ public class View {
 	    createUser.setPrefHeight(40);
 	    createUser.setDefaultButton(true);
 	    createUser.setPrefWidth(100);
-	    
-	   /* topGrid.setHalignment(loginButton, HPos.RIGHT);
-	    topGrid.setMargin(loginButton, new Insets(20, 0,20,0));
-		
-	    topGrid.setHalignment(createUser, HPos.LEFT);
-	    topGrid.setMargin(createUser, new Insets(20, 0,20,0));*/
-	    
-	    ArrayList userlist = new ArrayList();
+    	   
+	    LoadUsers userList = new LoadUsers();
+	    //Load User information
+	    try {
+			userList.loadUserData();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		};
+	  
 	    
 	    loginButton.setOnAction(new EventHandler<ActionEvent>() {  //login button
 	    	Boolean found_a_match = false;
@@ -131,10 +134,9 @@ public class View {
                 }
 
 
-                for(int i = 0; i< userlist.size(); i++) {
-                	User user = (User) userlist.get(i);
-
-                	if (user.userid.contentEquals(nameField.getText()) && user.password.contentEquals(passwordField.getText())) {
+                for(int i = 0; i< userList.getLenght(); i++) {
+                	
+                	if (((User) userList.getUser(i)).getUserName().contentEquals(nameField.getText()) && ((User) userList.getUser(i)).getUPassword().contentEquals(passwordField.getText())) {
 
                 		found_a_match = true;
                 		break;
@@ -190,8 +192,8 @@ public class View {
       
                 if (result.get() == ButtonType.OK) {
                    
-                	User user = new User(nameField.getText(), passwordField.getText() );  
-                	userlist.add(user);
+                	User newuser = new User(nameField.getText(), passwordField.getText() );  
+                	userList.addUser(newuser);
                 	
                 	nameField.clear();
                 	passwordField.clear();
