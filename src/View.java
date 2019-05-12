@@ -159,6 +159,10 @@ public class View {
                 		root.setTop(topGrid);
                 		
                 		topGrid.add(tableView, 0, 5);
+                		tableView.setMinHeight(700);
+                		tableView.setMinWidth(400);
+                		//tableView.prefHeightProperty().bind(stage.heightProperty());
+                		//tableView.prefWidthProperty().bind(stage.widthProperty());
 
 
                     }
