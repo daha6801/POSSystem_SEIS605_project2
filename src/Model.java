@@ -17,7 +17,7 @@ public class Model {
 			String line = null;
 			while ((line = br.readLine()) != null) {
 				String[] values = line.split(",");
-				Item info = new Item(values[0], Integer.parseInt(values[1]), Double.parseDouble(values[2]));
+				Item info = new Item(values[0], Integer.parseInt(values[1]), Double.parseDouble(values[2]), 0);
 				itemsObservableList.add(info);
 			}
 			

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -19,6 +20,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TableColumn;
@@ -47,7 +49,12 @@ public class View {
 	
 	CheckBox rememberMe = new CheckBox("Remember Me");
 	
-	TableView<Item> tableView = new TableView<>();	
+	Button addToCartButton = new Button("Add to Cart");
+	
+	TableView<Item> tableView = new TableView<>();
+		
+	TableView<ShoppingCart> shoppingCarttableView = new TableView<>();
+	
 	BorderPane setupScene() {
 		
 		BorderPane root = new BorderPane();
@@ -109,7 +116,7 @@ public class View {
 	    createUser.setPrefHeight(40);
 	    createUser.setDefaultButton(true);
 	    createUser.setPrefWidth(100);
-    	   
+    	   		
 	    LoadUsers userList = new LoadUsers();
 	    //Load User information
 	    try {
@@ -159,10 +166,15 @@ public class View {
                 		root.setTop(topGrid);
                 		
                 		topGrid.add(tableView, 0, 5);
-                		tableView.setMinHeight(700);
-                		tableView.setMinWidth(400);
-                		//tableView.prefHeightProperty().bind(stage.heightProperty());
-                		//tableView.prefWidthProperty().bind(stage.widthProperty());
+                		topGrid.add(shoppingCarttableView, 3, 5);
+                		
+                	    topGrid.add(addToCartButton, 2,5);
+                		GridPane.setHalignment(addToCartButton, HPos.RIGHT);
+                		
+                					
+                		addToCartButton.setPrefHeight(40);
+                		addToCartButton.setDefaultButton(true);
+                		addToCartButton.setPrefWidth(100);
 
 
                     }
