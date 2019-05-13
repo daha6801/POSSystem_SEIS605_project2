@@ -55,6 +55,13 @@ public class View {
 		
 	TableView<ShoppingCart> shoppingCarttableView = new TableView<>();
 	
+	Label totalPriceLable = new Label("Total Price");
+	Label totalPriceAmountLabel = new Label("0.00");
+	
+	Button checkOutButton = new Button("Checkout");
+	
+	
+	
 	BorderPane setupScene() {
 		
 		BorderPane root = new BorderPane();
@@ -175,7 +182,16 @@ public class View {
                 		addToCartButton.setPrefHeight(40);
                 		addToCartButton.setDefaultButton(true);
                 		addToCartButton.setPrefWidth(100);
-
+                		
+                		topGrid.add(totalPriceLable, 6, 5);
+                		topGrid.add(totalPriceAmountLabel, 7, 5);
+                		
+                		topGrid.add(checkOutButton, 9, 5);
+                		
+                		checkOutButton.setPrefHeight(40);
+                		checkOutButton.setDefaultButton(true);
+                		checkOutButton.setPrefWidth(100);
+                		
 
                     }
             		

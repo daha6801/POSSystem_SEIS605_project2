@@ -1,8 +1,12 @@
 package src;
 
+import java.util.function.UnaryOperator;
+
 import org.omg.CORBA.portable.ValueFactory;
 
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -28,7 +32,10 @@ public class Point_of_sale_system extends Application {
 	Model model = new Model();
 	View view = new View();
 	ObservableList<ShoppingCart> shoppingCartObservableList = FXCollections.observableArrayList();
-	
+    TableColumn<ShoppingCart, String> shoppingnameColumn;
+    TableColumn<ShoppingCart, Integer> shoppingquantityColumn;
+    TableColumn<ShoppingCart, Double> shoppingpriceColumn;
+    
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -43,6 +50,10 @@ public class Point_of_sale_system extends Application {
 
 	     setupActions();
 
+	     createshoppingCartTable();
+	     
+	     calculateTotalPrice();
+	     
 	     final Label label = new Label("Welcome to Point of Sale System");
 	     final VBox vbox = new VBox();
 	     final VBox vboxshopping = new VBox();
@@ -54,6 +65,7 @@ public class Point_of_sale_system extends Application {
 	     //vbox.setPrefHeight(500);// prefHeight
 	     view.shoppingCarttableView.prefWidthProperty().bind(primaryStage.widthProperty().multiply(0.30));
 	     view.shoppingCarttableView.prefHeightProperty().bind(primaryStage.heightProperty());
+	          
 	     vbox.getChildren().addAll(label, view.tableView);
 	     vboxshopping.getChildren().addAll(label, view.shoppingCarttableView);
 	        
@@ -127,22 +139,49 @@ public class Point_of_sale_system extends Application {
 		
 	    view.addToCartButton.setOnAction(new EventHandler<ActionEvent>() {
     	
+	    	
 			@Override
 			public void handle(ActionEvent arg0) {	
 
+				ShoppingCart shoppingCart = null;
 				for (Item r : view.tableView.getItems()) {
 		    	
 					if (selectColumn.getCellData(r) != null) {
-						if ( r.getUnitQuantity() > 0 ) {
+						if ( r.getUnitQuantity() > 0 && r.getselectQuantity() > 0) {
 
-							double totalPrice =  r.getselectQuantity() * r.getUnitPrice();
-							ShoppingCart shoppingCart = new ShoppingCart( r.getName(),  r.getselectQuantity() ,totalPrice);
-							shoppingCartObservableList.add(shoppingCart);
-		    			
+							if (view.shoppingCarttableView.getItems().isEmpty()) {
+								double totalPrice =  r.getselectQuantity() * r.getUnitPrice();
+								shoppingCart = new ShoppingCart( r.getName(),  r.getselectQuantity() ,totalPrice);
+								shoppingCartObservableList.add(shoppingCart);
+							}
+							else {
+								for (ShoppingCart s : view.shoppingCarttableView.getItems()) {
+								
+									if (r.getName().equals(s.getName())) {
+										shoppingCartObservableList.remove(s);
+										break;
+									}
+
+								}
+								
+								//Create a new object of ShoppingCart class and add to the observable list
+								double totalPrice =  r.getselectQuantity() * r.getUnitPrice();
+								shoppingCart = new ShoppingCart( r.getName(),  r.getselectQuantity() ,totalPrice);
+								shoppingCartObservableList.add(shoppingCart);
+								
+								//Decrease the counter of item from the itemsObservableList
+								//Integer qntyremaining = r.getUnitQuantity() - r.getselectQuantity();
+								//String name = r.getName();
+								//Double unitPrice = r.getUnitPrice();
+								
+								//model.itemsObservableList.remove(r);
+								//Item newitem = new Item(name, qntyremaining, unitPrice, 0);
+								//model.itemsObservableList.add(newitem);
+								
+							}
 						}
 					}
 		    	}
-				createshoppingCartTable();
 				
 			}
 	    });
@@ -155,17 +194,49 @@ public class Point_of_sale_system extends Application {
 			view.shoppingCarttableView.setItems(shoppingCartObservableList);
 			
 			//Create columns and bind them to their Property ValueFactory
-			TableColumn<ShoppingCart, String> shoppingnameColumn = new TableColumn<>("Item name");
+			shoppingnameColumn = new TableColumn<>("Item name");
 			shoppingnameColumn.setCellValueFactory(new PropertyValueFactory<ShoppingCart, String>("name"));
-			TableColumn<ShoppingCart, Integer> shoppingquantityColumn = new TableColumn<>("Quantity");
+			shoppingquantityColumn = new TableColumn<>("Quantity");
 			shoppingquantityColumn.setCellValueFactory(new PropertyValueFactory<ShoppingCart, Integer>("unitQuantity"));
-			TableColumn<ShoppingCart, Double> shoppingpriceColumn = new TableColumn<>("Total Price");
+			shoppingpriceColumn = new TableColumn<>("Total Price");
 			shoppingpriceColumn.setCellValueFactory(new PropertyValueFactory<ShoppingCart, Double>("totalPrice"));
 			
 			//add all columns to the tableviewrdaha
 			view.shoppingCarttableView.getColumns().setAll(shoppingnameColumn,shoppingquantityColumn,shoppingpriceColumn);
-			
-			
+						  
+		   
 	  }
+	 
+	 private void calculateTotalPrice() {
+		//bind the textField data with total amount paid
+		  	DoubleBinding totalPriceAmountLabelBinding = new DoubleBinding() {
+		  			
+		  		
+		  			{
+		  				super.bind(shoppingCartObservableList, view.totalPriceAmountLabel.textProperty());
+		  			}
+		  		
+		  			@Override
+		  			protected double computeValue() {
+		  				
+		  				double totalPrice = 0;
+		  				for (ShoppingCart r : view.shoppingCarttableView.getItems()) {
+		  			    	
+							if (shoppingpriceColumn.getCellData(r) != null) {
+								if ( r.getTotalPrice() > 0 ) {
+
+									totalPrice = totalPrice + r.getTotalPrice();  
+				    			
+								}
+							}
+				    	}
+						return totalPrice;
+		  				
+		  			}
+		  	};
+		  	
+		  //bind the totalPrice to totalPriceLabel
+			view.totalPriceAmountLabel.textProperty().bind(Bindings.format("%.2f", totalPriceAmountLabelBinding));
+	 }
 	 
 }
