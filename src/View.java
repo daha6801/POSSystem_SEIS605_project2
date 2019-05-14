@@ -31,6 +31,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -59,16 +60,20 @@ public class View {
 	TableView<ShoppingCart> shoppingCarttableView = new TableView<>();
 	
 	Label totalPriceLable = new Label("Total Price");
+	
 	Label totalPriceAmountLabel = new Label("0.00");
 	
 	Button checkOutButton = new Button("Checkout");
 	
 	
 	Label enterCashLabel = new Label("Enter Cash");
-	TextField enterPricetextField = new TextField("0.00");
+	
+	TextField enterPricetextField = new TextField("0.00");	
 	
 	Label balanceLabel = new Label("Balance");
+	
 	Label balanceAmountLabel = new Label("0.00");
+	
 	
 	BorderPane setupScene() {
 		
@@ -192,18 +197,27 @@ public class View {
                 		addToCartButton.setDefaultButton(true);
                 		addToCartButton.setPrefWidth(100);
                 		
-                		topGrid.add(totalPriceLable, 3, 0);
-                		topGrid.add(totalPriceAmountLabel, 4, 0);
-
-                		topGrid.add(enterCashLabel, 5, 0);
-                		topGrid.add(enterPricetextField, 6, 0 );
+                		VBox vbButtons = new VBox();
+                		vbButtons.setSpacing(50);
+                		vbButtons.setPadding(new Insets(330,20,20,10));
+                		vbButtons.getChildren().addAll(totalPriceLable, totalPriceAmountLabel, enterCashLabel, enterPricetextField);
+                		totalPriceLable.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
+                		enterCashLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
+                		enterPricetextField.setPrefWidth(40);
+                		balanceLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
+                		
+                		topGrid.add(vbButtons, 3, 0);
+                		
+                		topGrid.add(checkOutButton, 4, 0);
+	    
+					    VBox vbButtons2 = new VBox();
+						vbButtons2.setSpacing(100);
+						vbButtons2.setPadding(new Insets(330,20,20,20));
+						vbButtons2.getChildren().addAll(balanceLabel, balanceAmountLabel);
+						
+                		topGrid.add(vbButtons2, 5, 0);
+                	
                 		enterPricetextField.setEditable(true);
-                		
-                		topGrid.add(checkOutButton, 7, 0);
-                		
-
-						topGrid.add(balanceLabel, 8, 0);
-                		topGrid.add(balanceAmountLabel, 9, 0);
                 		
                 		checkOutButton.setPrefHeight(40);
                 		checkOutButton.setDefaultButton(true);
