@@ -80,6 +80,10 @@ public class View {
 	
 	Button export = new Button("Inventory Report");
 	
+	Button cashier = new Button("Cashier Report");
+	
+	Button register = new Button("Register Report");
+	
 	BorderPane setupScene() {
 		
 		BorderPane root = new BorderPane();
@@ -230,12 +234,29 @@ public class View {
                 		checkOutButton.setPrefWidth(100);
                 		
                 		
-                		topGrid.add(export, 6, 0);
+                		VBox vbButtons3 = new VBox();
+ 						vbButtons3.setSpacing(100);
+ 						vbButtons3.setPadding(new Insets(247,20,20,20));
+ 						vbButtons3.getChildren().addAll(export, cashier, register);
+                		
+                		topGrid.add(vbButtons3, 6, 0);
+                		export.setPrefHeight(40);
+                		export.setDefaultButton(true);
+                		export.setPrefWidth(120);
+                		
+                		cashier.setPrefHeight(40);
+                		cashier.setDefaultButton(true);
+                		cashier.setPrefWidth(100);
+                		
+                		register.setPrefHeight(40);
+                		register.setDefaultButton(true);
+                		register.setPrefWidth(120);
+                		
                         
                     }
                 }
                 else {
-                	showAlert(Alert.AlertType.ERROR, topGrid.getScene().getWindow(), "Login Error!", "Register First!");
+                	showAlert(Alert.AlertType.ERROR, topGrid.getScene().getWindow(), "Login Error!", "Invalid Username/Password!");
                 	return;
                 }
             }
