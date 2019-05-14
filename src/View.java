@@ -49,7 +49,7 @@ public class View {
 	
 	CheckBox rememberMe = new CheckBox("Remember Me");
 	
-	Button addToCartButton = new Button("Add to Cart");
+	Button addToCartButton = new Button("Update Cart");
 	
 	TableView<Item> tableView = new TableView<>();
 		

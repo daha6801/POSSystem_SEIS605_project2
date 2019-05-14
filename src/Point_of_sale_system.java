@@ -147,7 +147,7 @@ public class Point_of_sale_system extends Application {
 				for (Item r : view.tableView.getItems()) {
 		    	
 					if (selectColumn.getCellData(r) != null) {
-						if ( r.getUnitQuantity() > 0 && r.getselectQuantity() > 0) {
+						if ( r.getUnitQuantity() > 0 && r.getselectQuantity() >= 0) {
 
 							if (view.shoppingCarttableView.getItems().isEmpty()) {
 								double totalPrice =  r.getselectQuantity() * r.getUnitPrice();
@@ -157,27 +157,24 @@ public class Point_of_sale_system extends Application {
 							else {
 								for (ShoppingCart s : view.shoppingCarttableView.getItems()) {
 								
-									if (r.getName().equals(s.getName())) {
-										shoppingCartObservableList.remove(s);
-										break;
+									
+									if (s.getUnitQuantity() > 0) {
+										if (r.getName().equals(s.getName())) {
+											shoppingCartObservableList.remove(s);
+											break;
+										}
 									}
-
+								}
+								
+								if (r.getselectQuantity() == 0) {
+									return;
 								}
 								
 								//Create a new object of ShoppingCart class and add to the observable list
 								double totalPrice =  r.getselectQuantity() * r.getUnitPrice();
 								shoppingCart = new ShoppingCart( r.getName(),  r.getselectQuantity() ,totalPrice);
 								shoppingCartObservableList.add(shoppingCart);
-								
-								//Decrease the counter of item from the itemsObservableList
-								//Integer qntyremaining = r.getUnitQuantity() - r.getselectQuantity();
-								//String name = r.getName();
-								//Double unitPrice = r.getUnitPrice();
-								
-								//model.itemsObservableList.remove(r);
-								//Item newitem = new Item(name, qntyremaining, unitPrice, 0);
-								//model.itemsObservableList.add(newitem);
-								
+																
 							}
 						}
 					}
@@ -238,5 +235,5 @@ public class Point_of_sale_system extends Application {
 		  //bind the totalPrice to totalPriceLabel
 			view.totalPriceAmountLabel.textProperty().bind(Bindings.format("%.2f", totalPriceAmountLabelBinding));
 	 }
-	 
+	 	 
 }
