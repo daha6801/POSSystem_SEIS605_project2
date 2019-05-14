@@ -1,12 +1,16 @@
 package src;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.function.UnaryOperator;
 
 //import org.omg.CORBA.portable.ValueFactory;
@@ -203,17 +207,29 @@ public class Point_of_sale_system extends Application {
 		        Date date = new Date();
                 SimpleDateFormat ft = new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss a zzz");
                 String overAllPrice = view.totalPriceAmountLabel.getText();
-                double n = Math.random();
-                long n1 = Math.round(Math.random()*10);
+                //double n = Math.random();
+                //long n1 = Math.round(Math.random()*10);
+                int n1 = 1;
                 long n6 = Math.round(Math.random()*1000000);
                 String cashierName = view.nameField.getText();
 
-                File directory = new File("C:\\Temp");
+                File directory = new File("C:\\Drawer");
                 if (! directory.exists()){
                     directory.mkdir();
                 }
+
+                String drawerData;
+                if (cashierName.equals("bvang")) {
+                	drawerData = "C:\\Drawer\\bvang_drawer.csv";
+                } else if (cashierName.equals("rdahal")) {
+                	drawerData = "C:\\Drawer\\rdahal_drawer.csv";
+                } else if (cashierName.equals("jlie")) {
+                	drawerData = "C:\\Drawer\\jlie_drawer.csv";
+                } else {
+                	drawerData = "C:\\Drawer\\drawer.csv";
+                }
                 
-                try (BufferedWriter bf = new BufferedWriter(new FileWriter("C:\\Temp\\Data.txt", true)))
+                try (BufferedWriter bf = new BufferedWriter(new FileWriter(drawerData, true)))
                 {
                 	bf.newLine();
                     bf.write("*************Point Of Sale System*************,");
@@ -233,7 +249,49 @@ public class Point_of_sale_system extends Application {
                 catch (IOException ex)
                 {
                 	//
-                }		        
+                }
+                
+                File totalAmountOfSale = new File("C:\\Drawer\\totalAmountOfSales.txt");
+            	try (BufferedWriter df = new BufferedWriter(new FileWriter(totalAmountOfSale, true)))
+            	{
+            		df.write(overAllPrice);
+                    df.newLine();
+            	} 
+            	catch (IOException ex)
+            	{
+            		//
+            	}
+                
+            	if (totalAmountOfSale.exists()) {
+            		//exists so read all the numbers line by line and add them
+            		List<Double> list = new ArrayList<Double>();
+            		BufferedReader reader;
+            		try {
+            			reader = new BufferedReader(new FileReader(totalAmountOfSale));
+            			String line = reader.readLine();
+            			while(line != null) {
+            				line = reader.readLine();
+            				double newLine = Double.parseDouble(line);
+            				list.add(newLine);
+            			}
+            			reader.close();
+            		} catch (IOException e) {
+            			e.printStackTrace();
+            		}
+            		
+            		double sum = 0;
+            		for (int i = 0; i < list.size(); i ++)
+            			sum += list.get(i);
+                	try (BufferedWriter df = new BufferedWriter(new FileWriter(totalAmountOfSale, true)))
+                	{
+                		df.newLine();
+                		df.write("Drawer: $" + sum);
+                	} 
+                	catch (IOException ex)
+                	{
+                		//
+                	}
+            	}	        
 
 			}
 	    	
