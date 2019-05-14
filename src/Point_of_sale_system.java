@@ -57,12 +57,9 @@ public class Point_of_sale_system extends Application {
 	     final Label label = new Label("Welcome to Point of Sale System");
 	     final VBox vbox = new VBox();
 	     final VBox vboxshopping = new VBox();
-	     //vbox.setSpacing(20);
-	    // vbox.setPadding(new Insets(20, 20, 20, 20));
+
 	     view.tableView.prefWidthProperty().bind(primaryStage.widthProperty().multiply(0.30));
 	     view.tableView.prefHeightProperty().bind(primaryStage.heightProperty());
-	     //vbox.setPrefWidth(400);// prefWidth
-	     //vbox.setPrefHeight(500);// prefHeight
 	     view.shoppingCarttableView.prefWidthProperty().bind(primaryStage.widthProperty().multiply(0.30));
 	     view.shoppingCarttableView.prefHeightProperty().bind(primaryStage.heightProperty());
 	          
@@ -181,6 +178,25 @@ public class Point_of_sale_system extends Application {
 		    	}
 				
 			}
+	    });
+	    
+	    view.checkOutButton.setOnAction(new EventHandler<ActionEvent>() {
+
+			
+			public void handle(ActionEvent arg0) {
+				
+		        if (!view.enterPricetextField.getText().isEmpty()) {
+		        	double getCash = Double.parseDouble(view.enterPricetextField.getText());
+		        	double totalprice = Double.parseDouble(view.totalPriceAmountLabel.getText());
+		        	if (getCash > totalprice) {
+		        		double balance = getCash - totalprice;
+		        		view.balanceAmountLabel.setText(Double.toString(balance));
+		        	}
+		        }
+
+			}
+	    	
+	    	
 	    });
 	   	   
 	}

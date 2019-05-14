@@ -13,6 +13,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -23,6 +24,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.control.TableColumn;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -61,6 +64,11 @@ public class View {
 	Button checkOutButton = new Button("Checkout");
 	
 	
+	Label enterCashLabel = new Label("Enter Cash");
+	TextField enterPricetextField = new TextField("0.00");
+	
+	Label balanceLabel = new Label("Balance");
+	Label balanceAmountLabel = new Label("0.00");
 	
 	BorderPane setupScene() {
 		
@@ -172,10 +180,11 @@ public class View {
                 		GridPane topGrid = new GridPane();
                 		root.setTop(topGrid);
                 		
-                		topGrid.add(tableView, 0, 5);
-                		topGrid.add(shoppingCarttableView, 3, 5);
+                		topGrid.add(tableView, 0, 0);
+                		topGrid.add(addToCartButton, 1,0);
+                		topGrid.add(shoppingCarttableView, 2, 0);
                 		
-                	    topGrid.add(addToCartButton, 2,5);
+                	    
                 		GridPane.setHalignment(addToCartButton, HPos.RIGHT);
                 		
                 					
@@ -183,15 +192,22 @@ public class View {
                 		addToCartButton.setDefaultButton(true);
                 		addToCartButton.setPrefWidth(100);
                 		
-                		topGrid.add(totalPriceLable, 6, 5);
-                		topGrid.add(totalPriceAmountLabel, 7, 5);
+                		topGrid.add(totalPriceLable, 3, 0);
+                		topGrid.add(totalPriceAmountLabel, 4, 0);
+
+                		topGrid.add(enterCashLabel, 5, 0);
+                		topGrid.add(enterPricetextField, 6, 0 );
+                		enterPricetextField.setEditable(true);
                 		
-                		topGrid.add(checkOutButton, 9, 5);
+                		topGrid.add(checkOutButton, 7, 0);
+                		
+
+						topGrid.add(balanceLabel, 8, 0);
+                		topGrid.add(balanceAmountLabel, 9, 0);
                 		
                 		checkOutButton.setPrefHeight(40);
                 		checkOutButton.setDefaultButton(true);
                 		checkOutButton.setPrefWidth(100);
-                		
 
                     }
             		
@@ -236,8 +252,7 @@ public class View {
                 
             }
         });
-	    
-	    
+	   	    
 		topGrid.getRowConstraints().add(new RowConstraints(100));
 		topGrid.getColumnConstraints().add(new ColumnConstraints(500));
 		
