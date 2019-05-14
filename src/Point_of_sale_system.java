@@ -1,5 +1,9 @@
 package src;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.Writer;
 import java.util.function.UnaryOperator;
 
 //import org.omg.CORBA.portable.ValueFactory;
@@ -57,20 +61,13 @@ public class Point_of_sale_system extends Application {
 	     final Label label = new Label("Welcome to Point of Sale System");
 	     final VBox vbox = new VBox();
 	     final VBox vboxshopping = new VBox();
-	     final VBox buttons = new VBox();
 
 	     view.tableView.prefWidthProperty().bind(primaryStage.widthProperty().multiply(0.30));
 	     view.tableView.prefHeightProperty().bind(primaryStage.heightProperty());
-	     //view.tableView.setMaxWidth(300);
 	     view.shoppingCarttableView.prefWidthProperty().bind(primaryStage.widthProperty().multiply(0.30));
 	     view.shoppingCarttableView.prefHeightProperty().bind(primaryStage.heightProperty());
-	     //view.shoppingCarttableView.setMaxWidth(300);
-	     //view.balanceAmountLabel.prefWidthProperty().bind(primaryStage.widthProperty().multiply(0.10));
-	          
 	     vbox.getChildren().addAll(label, view.tableView);
 	     vboxshopping.getChildren().addAll(label, view.shoppingCarttableView);
-	    // buttons.getChildren().addAll(label, view.checkOutButton, view.balanceLabel, view.balanceAmountLabel);
-	       
 	     
 	   
 	     primaryStage.setScene(scene);
@@ -204,7 +201,23 @@ public class Point_of_sale_system extends Application {
 	    	
 	    	
 	    });
-	   	   
+
+	    //bind export button to output inventory csv
+	    view.export.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+           public void handle(ActionEvent e)  
+            {
+              try 
+              {
+                writeExcel();
+              }
+              catch (Exception ex) 
+              {
+            	  ex.printStackTrace();
+              }
+            }
+             
+        });
 	}
 	
 	 private void createshoppingCartTable() {
@@ -257,5 +270,27 @@ public class Point_of_sale_system extends Application {
 		  //bind the totalPrice to totalPriceLabel
 			view.totalPriceAmountLabel.textProperty().bind(Bindings.format("%.2f", totalPriceAmountLabelBinding));
 	 }
-	 	 
+
+	 public void writeExcel() throws Exception {
+	        Writer writer = null;
+	        try {
+	            File file = new File("C/Inventory.csv");
+	            writer = new BufferedWriter(new FileWriter(file));
+	            
+	            
+	            for (Item r : view.tableView.getItems()) {
+
+	                String text = r.getName() + "," + r.getUnitQuantity() + "\n";
+
+	                writer.write(text);
+	            }
+	        } catch (Exception ex) {
+	            ex.printStackTrace();
+	        }
+	        finally {
+
+	            writer.flush();
+	             writer.close();
+	        }
+	    }
 }

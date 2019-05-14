@@ -1,6 +1,10 @@
 package src;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -74,6 +78,7 @@ public class View {
 	
 	Label balanceAmountLabel = new Label("0.00");
 	
+	Button export = new Button("Inventory Report");
 	
 	BorderPane setupScene() {
 		
@@ -149,7 +154,8 @@ public class View {
 	    
 	    loginButton.setOnAction(new EventHandler<ActionEvent>() {  //login button
 	    	Boolean found_a_match = false;
-            @Override
+            @SuppressWarnings("unchecked")
+			@Override
             public void handle(ActionEvent event) {
                 if(nameField.getText().isEmpty()) {
                     showAlert(Alert.AlertType.ERROR, topGrid.getScene().getWindow(), "Form Error!", "Please enter your name");
@@ -174,8 +180,8 @@ public class View {
                 if (found_a_match) {
 
             		Alert alert = new Alert(AlertType.CONFIRMATION);
-                    alert.setTitle("Confirmation Dialog");
-                    alert.setHeaderText("Look, a Confirmation Dialog");
+                    alert.setTitle("");
+                    alert.setHeaderText("");
                     alert.setContentText("Welcome to the POS System");
                     
                     Optional<ButtonType> result = alert.showAndWait();
@@ -222,9 +228,11 @@ public class View {
                 		checkOutButton.setPrefHeight(40);
                 		checkOutButton.setDefaultButton(true);
                 		checkOutButton.setPrefWidth(100);
-
+                		
+                		
+                		topGrid.add(export, 6, 0);
+                        
                     }
-            		
                 }
                 else {
                 	showAlert(Alert.AlertType.ERROR, topGrid.getScene().getWindow(), "Login Error!", "Register First!");
@@ -277,6 +285,9 @@ public class View {
 		
 		return root;
 	}
+	
+	
+
 
 	protected void showAlert(AlertType error, Window window, String title, String message) {
 	       Alert alert = new Alert(error);
