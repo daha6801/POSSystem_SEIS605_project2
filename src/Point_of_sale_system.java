@@ -256,46 +256,13 @@ public class Point_of_sale_system extends Application {
             	{
             		df.write(overAllPrice);
                     df.newLine();
+                    df.close();
             	} 
             	catch (IOException ex)
             	{
             		//
-            	}
-                
-            	if (totalAmountOfSale.exists()) {
-            		//exists so read all the numbers line by line and add them
-            		List<Double> list = new ArrayList<Double>();
-            		BufferedReader reader;
-            		try {
-            			reader = new BufferedReader(new FileReader(totalAmountOfSale));
-            			String line = reader.readLine();
-            			while(line != null) {
-            				line = reader.readLine();
-            				double newLine = Double.parseDouble(line);
-            				list.add(newLine);
-            			}
-            			reader.close();
-            		} catch (IOException e) {
-            			e.printStackTrace();
-            		}
-            		
-            		double sum = 0;
-            		for (int i = 0; i < list.size(); i ++)
-            			sum += list.get(i);
-                	try (BufferedWriter df = new BufferedWriter(new FileWriter(totalAmountOfSale, true)))
-                	{
-                		df.newLine();
-                		df.write("Drawer: $" + sum);
-                	} 
-                	catch (IOException ex)
-                	{
-                		//
-                	}
-            	}	        
-
+            	}       
 			}
-	    	
-	    	
 	    });
 
 	    //bind export button to output inventory csv
