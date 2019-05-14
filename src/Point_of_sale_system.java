@@ -274,13 +274,13 @@ public class Point_of_sale_system extends Application {
 	 public void writeExcel() throws Exception {
 	        Writer writer = null;
 	        try {
-	            File file = new File("C/Inventory.csv");
+	            File file = new File("src/Inventory.csv");
 	            writer = new BufferedWriter(new FileWriter(file));
 	            
 	            
 	            for (Item r : view.tableView.getItems()) {
 
-	                String text = r.getName() + "," + r.getUnitQuantity() + "\n";
+	                String text = r.getName() + "," + "Quantity: " + r.getUnitQuantity() + "," + "Threshold: 5" + "," + "Supplier: Cub Foods" + "," + "Outstanding Order: 5" + "\n";
 
 	                writer.write(text);
 	            }
