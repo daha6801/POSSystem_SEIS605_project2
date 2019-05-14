@@ -3,7 +3,10 @@ package src;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.function.UnaryOperator;
 
 //import org.omg.CORBA.portable.ValueFactory;
@@ -196,6 +199,41 @@ public class Point_of_sale_system extends Application {
 		        		view.balanceAmountLabel.setText(Double.toString(balance));
 		        	}
 		        }
+		        
+		        Date date = new Date();
+                SimpleDateFormat ft = new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss a zzz");
+                String overAllPrice = view.totalPriceAmountLabel.getText();
+                double n = Math.random();
+                long n1 = Math.round(Math.random()*10);
+                long n6 = Math.round(Math.random()*1000000);
+                String cashierName = view.nameField.getText();
+
+                File directory = new File("C:\\Temp");
+                if (! directory.exists()){
+                    directory.mkdir();
+                }
+                
+                try (BufferedWriter bf = new BufferedWriter(new FileWriter("C:\\Temp\\Data.txt", true)))
+                {
+                	bf.newLine();
+                    bf.write("*************Point Of Sale System*************,");
+                    bf.newLine();
+                    bf.write(ft.format(date));
+                    bf.newLine();
+                    bf.write("Register ID: " + n1);
+                    bf.newLine();
+                    bf.write("Cashier Name: " + cashierName);
+                    bf.newLine();
+                    bf.write("Sale ID: " + n6);
+                    bf.newLine();
+                    bf.write("Total Sales: $" + overAllPrice);
+                    bf.newLine();
+                    bf.close();
+                }
+                catch (IOException ex)
+                {
+                	//
+                }		        
 
 			}
 	    	
