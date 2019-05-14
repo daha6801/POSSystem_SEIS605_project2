@@ -261,6 +261,7 @@ public class Point_of_sale_system extends Application {
             	catch (IOException ex)
             	{
             		//
+            		//
             	}       
 			}
 	    });
