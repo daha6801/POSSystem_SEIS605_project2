@@ -230,6 +230,32 @@ public class Point_of_sale_system extends Application {
 			}
 	    });
 	    
+	    view.cancelTransaction.setOnAction(new EventHandler<ActionEvent>() {
+    	
+	    	
+			@Override
+			public void handle(ActionEvent arg0) {	
+				for (ShoppingCart s : view.shoppingCarttableView.getItems()) {
+					
+					for (Item r : view.tableView.getItems()) {
+						if (r.getName().equals(s.getName())) {
+							
+							int index = model.itemsObservableList.indexOf(r); //get index of r
+							model.itemsObservableList.set(index, new Item(r.getName(), r.getUnitQuantity() + s.getUnitQuantity(), r.getUnitPrice(), 0));
+						}
+						//else {
+						//	Item newitem = new Item(s.getName(), s.getUnitQuantity(), r.getUnitPrice(), r.getselectQuantity());
+				       // 	model.itemsObservableList.add(newitem);
+						//}
+					}
+				}
+				shoppingCartObservableList.clear();
+				view.enterPricetextField.clear();
+				view.balanceAmountLabel.setText("0.00");
+			}
+	    });
+	    
+	    
 	    view.AddInventoryButton.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -334,6 +360,8 @@ public class Point_of_sale_system extends Application {
 		        	if (getCash > totalprice) {
 		        		double balance = getCash - totalprice;
 		        		view.balanceAmountLabel.setText(Double.toString(balance));
+		        		shoppingCartObservableList.clear(); //remove items from the shopping cart once transaction is complete
+		        		view.enterPricetextField.clear();
 		        	}
 		        	else {
 		        		view.balanceAmountLabel.setText("Not enough!");

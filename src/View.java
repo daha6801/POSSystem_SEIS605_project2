@@ -77,6 +77,7 @@ public class View {
 	Label totalPriceAmountLabel = new Label("0.00");
 	
 	Button checkOutButton = new Button("Checkout");
+	Button cancelTransaction = new Button("Cancel Transaction");
 	
 	
 	Label enterCashLabel = new Label("Enter Cash");
@@ -231,7 +232,12 @@ public class View {
                 		enterPricetextField.setEditable(true);
                 		
 						topGrid.add(vbButtons, 3, 0);
-                		topGrid.add(checkOutButton, 4, 0);
+						
+						VBox vbButtons5 = new VBox();
+                		vbButtons5.setSpacing(100);
+                		vbButtons5.setPadding(new Insets(330,20,20,20));
+                		vbButtons5.getChildren().addAll(checkOutButton, cancelTransaction);
+                		topGrid.add(vbButtons5, 4, 0);
 						
 						VBox vbButtons2 = new VBox();
 						vbButtons2.setSpacing(100);
