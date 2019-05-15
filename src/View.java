@@ -1,14 +1,14 @@
 package src;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.Writer;
+import javafx.scene.layout.VBox;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -35,7 +35,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -51,6 +50,14 @@ public class View {
 	Label passwordLabel = new Label("Password");
 	PasswordField passwordField = new PasswordField();
 
+	Label userEnteredItem = new Label("New Item");
+	TextField userEnteredItemTextField = new TextField();
+	
+	Label userEnteredQuantity = new Label("Quantity");
+	TextField userEnteredQuantityTextField = new TextField();
+	
+	Label userEnteredIPrice= new Label("Price");
+	TextField userEnteredIPriceTextField = new TextField();
 	
 	Button loginButton = new Button("Log in");
 	Button createUser = new Button("New User");
@@ -58,24 +65,24 @@ public class View {
 	CheckBox rememberMe = new CheckBox("Remember Me");
 	
 	Button addToCartButton = new Button("Update Cart");
+	Button AddInventoryButton = new Button("Add Inventory");
+	Button DeleteInventoryButton = new Button("Remove Inventory");
+	
 	
 	TableView<Item> tableView = new TableView<>();
 		
 	TableView<ShoppingCart> shoppingCarttableView = new TableView<>();
 	
 	Label totalPriceLable = new Label("Total Price");
-	
 	Label totalPriceAmountLabel = new Label("0.00");
 	
 	Button checkOutButton = new Button("Checkout");
 	
 	
 	Label enterCashLabel = new Label("Enter Cash");
-	
-	TextField enterPricetextField = new TextField("0.00");	
+	TextField enterPricetextField = new TextField("0.00");
 	
 	Label balanceLabel = new Label("Balance");
-	
 	Label balanceAmountLabel = new Label("0.00");
 	
 	Button export = new Button("Inventory Report");
@@ -158,8 +165,7 @@ public class View {
 	    
 	    loginButton.setOnAction(new EventHandler<ActionEvent>() {  //login button
 	    	Boolean found_a_match = false;
-            @SuppressWarnings("unchecked")
-			@Override
+            @Override
             public void handle(ActionEvent event) {
                 if(nameField.getText().isEmpty()) {
                     showAlert(Alert.AlertType.ERROR, topGrid.getScene().getWindow(), "Form Error!", "Please enter your name");
@@ -196,7 +202,13 @@ public class View {
                 		root.setTop(topGrid);
                 		
                 		topGrid.add(tableView, 0, 0);
-                		topGrid.add(addToCartButton, 1,0);
+                		
+                		VBox vbButtons4 = new VBox();
+                		vbButtons4.setSpacing(100);
+                		vbButtons4.setPadding(new Insets(330,20,20,20));
+                		vbButtons4.getChildren().addAll(addToCartButton, AddInventoryButton, DeleteInventoryButton);
+                		topGrid.add(vbButtons4, 1, 0);
+                		
                 		topGrid.add(shoppingCarttableView, 2, 0);
                 		
                 	    
@@ -207,53 +219,52 @@ public class View {
                 		addToCartButton.setDefaultButton(true);
                 		addToCartButton.setPrefWidth(100);
                 		
-                		VBox vbButtons = new VBox();
-                		vbButtons.setSpacing(50);
-                		vbButtons.setPadding(new Insets(330,20,20,10));
-                		vbButtons.getChildren().addAll(totalPriceLable, totalPriceAmountLabel, enterCashLabel, enterPricetextField);
-                		totalPriceLable.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
-                		enterCashLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
-                		enterPricetextField.setPrefWidth(40);
-                		balanceLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
+						VBox vbButtons = new VBox();
+						vbButtons.setSpacing(50);
+						vbButtons.setPadding(new Insets(330,20,20,10));
+						vbButtons.getChildren().addAll(totalPriceLable, totalPriceAmountLabel, enterCashLabel, enterPricetextField);
+						totalPriceLable.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
+						enterCashLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
+						enterPricetextField.setPrefWidth(40);
+						balanceLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
                 		
-                		topGrid.add(vbButtons, 3, 0);
+                		enterPricetextField.setEditable(true);
                 		
+						topGrid.add(vbButtons, 3, 0);
                 		topGrid.add(checkOutButton, 4, 0);
-	    
-					    VBox vbButtons2 = new VBox();
+						
+						VBox vbButtons2 = new VBox();
 						vbButtons2.setSpacing(100);
 						vbButtons2.setPadding(new Insets(330,20,20,20));
 						vbButtons2.getChildren().addAll(balanceLabel, balanceAmountLabel);
+               		
+						topGrid.add(vbButtons2, 5, 0);
 						
-                		topGrid.add(vbButtons2, 5, 0);
-                	
-                		enterPricetextField.setEditable(true);
-                		
                 		checkOutButton.setPrefHeight(40);
                 		checkOutButton.setDefaultButton(true);
                 		checkOutButton.setPrefWidth(100);
-                		
-                		
-                		VBox vbButtons3 = new VBox();
- 						vbButtons3.setSpacing(100);
- 						vbButtons3.setPadding(new Insets(247,20,20,20));
- 						vbButtons3.getChildren().addAll(export, cashier, register);
-                		
-                		topGrid.add(vbButtons3, 6, 0);
-                		export.setPrefHeight(40);
-                		export.setDefaultButton(true);
-                		export.setPrefWidth(120);
-                		
-                		cashier.setPrefHeight(40);
-                		cashier.setDefaultButton(true);
-                		cashier.setPrefWidth(100);
-                		
-                		register.setPrefHeight(40);
-                		register.setDefaultButton(true);
-                		register.setPrefWidth(120);
-                		
-                        
+						
+						VBox vbButtons3 = new VBox();
+						
+						vbButtons3.setSpacing(100);
+						vbButtons3.setPadding(new Insets(247,20,20,20));
+						vbButtons3.getChildren().addAll(export, cashier, register);
+						
+						topGrid.add(vbButtons3, 6, 0);
+						export.setPrefHeight(40);
+						export.setDefaultButton(true);
+						export.setPrefWidth(120);
+						
+						cashier.setPrefHeight(40);
+						cashier.setDefaultButton(true);
+						cashier.setPrefWidth(100);
+						
+						register.setPrefHeight(40);
+						register.setDefaultButton(true);
+						register.setPrefWidth(120);
+
                     }
+            		
                 }
                 else {
                 	showAlert(Alert.AlertType.ERROR, topGrid.getScene().getWindow(), "Login Error!", "Invalid Username/Password!");
@@ -306,9 +317,6 @@ public class View {
 		
 		return root;
 	}
-	
-	
-
 
 	protected void showAlert(AlertType error, Window window, String title, String message) {
 	       Alert alert = new Alert(error);

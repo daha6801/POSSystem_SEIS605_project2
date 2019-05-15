@@ -11,11 +11,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 import org.omg.CORBA.portable.ValueFactory;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ObjectProperty;
@@ -29,16 +31,23 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
 import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Pair;
 import javafx.util.StringConverter;
 
 public class Point_of_sale_system extends Application {
@@ -151,7 +160,7 @@ public class Point_of_sale_system extends Application {
 		selectColumn.setCellValueFactory(callback);
 		
 		quantityColumn = new TableColumn<>("Quantity");
-		//quantityColumn.setCellValueFactory(new PropertyValueFactory<Item, Integer>("unitQuantity"));
+
 		quantityColumn.setCellValueFactory(new Callback<CellDataFeatures<Item, Integer>, ObservableValue<Integer>>() {
 
 			@Override
@@ -171,6 +180,7 @@ public class Point_of_sale_system extends Application {
 			@Override
 			public void handle(ActionEvent arg0) {	
 
+				view.tableView.refresh();
 				ShoppingCart shoppingCart = null;
 				for (Item r : view.tableView.getItems()) {
 		    	
@@ -220,6 +230,98 @@ public class Point_of_sale_system extends Application {
 			}
 	    });
 	    
+	    view.AddInventoryButton.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				// Create the custom dialog.
+			    Dialog<Pair<String, String>> dialog = new Dialog<>();
+			    dialog.setTitle("Add Inventory");
+
+			    // Set the button types.
+			    ButtonType loginButtonType = new ButtonType("OK", ButtonData.OK_DONE);
+			    dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+
+			    GridPane gridPane = new GridPane();
+			    gridPane.setHgap(10);
+			    gridPane.setVgap(10);
+			    gridPane.setPadding(new Insets(20, 150, 10, 10));
+
+			    gridPane.add(view.userEnteredItem, 0, 0);
+			    gridPane.add(view.userEnteredItemTextField, 1, 0);
+			    gridPane.add(view.userEnteredQuantity, 0, 1);
+			    gridPane.add(view.userEnteredQuantityTextField, 1, 1);
+
+			    dialog.getDialogPane().setContent(gridPane);
+
+			    dialog.setResultConverter(dialogButton -> {
+			        if (dialogButton == loginButtonType) {
+			            return new Pair<>(view.userEnteredItemTextField.getText(), view.userEnteredQuantityTextField.getText());
+			        }
+			        return null;
+			    });
+
+			    Optional<Pair<String, String>> result = dialog.showAndWait();
+			    
+			    result.ifPresent(pair -> {
+			        //System.out.println("From=" + pair.getKey() + ", To=" + pair.getValue());
+			        Boolean item_already_in_the_list = false;
+			        for (Item r : view.tableView.getItems()) {
+				    	
+						if (r.getName().equals(pair.getKey())) {
+							item_already_in_the_list = true;
+							break;
+						}
+				    }
+			        
+			        if (!item_already_in_the_list) {
+			        	Item newitem = new Item(pair.getKey(), Integer.parseInt(pair.getValue()), 2.69, 0);
+			        	model.itemsObservableList.add(newitem);
+			        }
+			        
+			        view.tableView.refresh();
+			    });
+				
+			    
+			}
+	    	
+	    	
+	    });
+	    
+	    
+	    view.DeleteInventoryButton.setOnAction(new EventHandler<ActionEvent>() {
+
+	    	
+	    	Boolean item_already_in_the_list = false;
+			@Override
+			public void handle(ActionEvent arg0) {
+				
+				TextInputDialog dialog = new TextInputDialog("");
+				 
+		        dialog.setTitle("Delete Inventory");
+		        dialog.setHeaderText("Enter the name of the item you want to delete:");
+		        dialog.setContentText("Name:");
+		 
+		        Optional<String> result = dialog.showAndWait();
+		 
+		        result.ifPresent(name -> {
+		        	
+		        	for (Item r : view.tableView.getItems()) {
+				    	
+						if (r.getName().equals(name)) {
+							model.itemsObservableList.remove(r);
+							break;
+						}
+				    }
+			        
+		        });
+
+				
+			}
+	    	
+	    	
+	    });
+	    
 	    
 	    view.checkOutButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -232,6 +334,9 @@ public class Point_of_sale_system extends Application {
 		        	if (getCash > totalprice) {
 		        		double balance = getCash - totalprice;
 		        		view.balanceAmountLabel.setText(Double.toString(balance));
+		        	}
+		        	else {
+		        		view.balanceAmountLabel.setText("Not enough!");
 		        	}
 		        }
 		        
