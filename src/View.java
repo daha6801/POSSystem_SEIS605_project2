@@ -59,6 +59,14 @@ public class View {
 	Label userEnteredIPrice= new Label("Price");
 	TextField userEnteredIPriceTextField = new TextField();
 	
+	Label userReturnedItem = new Label("New Item");
+	TextField userEReturnedItemTextField = new TextField();
+	
+	Label userReturnedQuantity = new Label("Quantity");
+	TextField userReturnedQuantityTextField = new TextField();
+	
+	
+	
 	Button loginButton = new Button("Log in");
 	Button createUser = new Button("New User");
 	
@@ -78,6 +86,7 @@ public class View {
 	
 	Button checkOutButton = new Button("Checkout");
 	Button cancelTransaction = new Button("Cancel Transaction");
+	Button returnItembutton = new Button("Return item");
 	
 	
 	Label enterCashLabel = new Label("Enter Cash");
@@ -236,7 +245,7 @@ public class View {
 						VBox vbButtons5 = new VBox();
                 		vbButtons5.setSpacing(100);
                 		vbButtons5.setPadding(new Insets(330,20,20,20));
-                		vbButtons5.getChildren().addAll(checkOutButton, cancelTransaction);
+                		vbButtons5.getChildren().addAll(checkOutButton, cancelTransaction, returnItembutton);
                 		topGrid.add(vbButtons5, 4, 0);
 						
 						VBox vbButtons2 = new VBox();

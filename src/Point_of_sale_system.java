@@ -243,10 +243,7 @@ public class Point_of_sale_system extends Application {
 							int index = model.itemsObservableList.indexOf(r); //get index of r
 							model.itemsObservableList.set(index, new Item(r.getName(), r.getUnitQuantity() + s.getUnitQuantity(), r.getUnitPrice(), 0));
 						}
-						//else {
-						//	Item newitem = new Item(s.getName(), s.getUnitQuantity(), r.getUnitPrice(), r.getselectQuantity());
-				       // 	model.itemsObservableList.add(newitem);
-						//}
+
 					}
 				}
 				shoppingCartObservableList.clear();
@@ -255,6 +252,63 @@ public class Point_of_sale_system extends Application {
 			}
 	    });
 	    
+	    
+	    view.returnItembutton.setOnAction(new EventHandler<ActionEvent>() {
+    	
+	    	
+			@Override
+			public void handle(ActionEvent arg0) {
+				
+				
+				Dialog<Pair<String, String>> dialog = new Dialog<>();
+			    dialog.setTitle("Return Items");
+
+			    // Set the button types.
+			    ButtonType loginButtonType = new ButtonType("OK", ButtonData.OK_DONE);
+			    dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+
+			    GridPane gridPane = new GridPane();
+			    gridPane.setHgap(10);
+			    gridPane.setVgap(10);
+			    gridPane.setPadding(new Insets(20, 150, 10, 10));
+
+			    gridPane.add(view.userReturnedItem, 0, 0);
+			    gridPane.add(view.userEReturnedItemTextField, 1, 0);
+			    gridPane.add(view.userReturnedQuantity, 0, 1);
+			    gridPane.add(view.userReturnedQuantityTextField, 1, 1);
+
+			    dialog.getDialogPane().setContent(gridPane);
+
+			    dialog.setResultConverter(dialogButton -> {
+			        if (dialogButton == loginButtonType) {
+			            return new Pair<>(view.userEReturnedItemTextField.getText(), view.userReturnedQuantityTextField.getText());
+			        }
+			        return null;
+			    });
+			    
+			    Optional<Pair<String, String>> result = dialog.showAndWait();
+			    
+			    result.ifPresent(pair -> {
+
+			        Double return_balance = 0.00;
+			        for (Item r : view.tableView.getItems()) {
+				    	
+						if (r.getName().equals(pair.getKey())) {
+
+							int index = model.itemsObservableList.indexOf(r); 
+							model.itemsObservableList.set(index, new Item(r.getName(), (r.getUnitQuantity() + Integer.parseInt(pair.getValue())), r.getUnitPrice(), 0));
+							return_balance = Integer.parseInt(pair.getValue()) * r.getUnitPrice();
+							break;
+						}
+				    }
+			        
+			        view.balanceAmountLabel.setText(Double.toString(return_balance));
+			
+			        view.tableView.refresh();
+			    });
+	
+			}
+	    });
 	    
 	    view.AddInventoryButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -290,7 +344,6 @@ public class Point_of_sale_system extends Application {
 			    Optional<Pair<String, String>> result = dialog.showAndWait();
 			    
 			    result.ifPresent(pair -> {
-			        //System.out.println("From=" + pair.getKey() + ", To=" + pair.getValue());
 			        Boolean item_already_in_the_list = false;
 			        for (Item r : view.tableView.getItems()) {
 				    	
